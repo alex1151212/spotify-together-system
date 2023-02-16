@@ -1,5 +1,5 @@
 export default class Cookie {
-  private static sessionForSeconds: number = 7200;
+  private static sessionForSeconds: number = 3600;
 
   public static getCookie(key: string): string {
     const cookie = document.cookie;

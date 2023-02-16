@@ -9,8 +9,19 @@ const Method = {
 };
 
 export const api = {
-  // bravelog
-  login: { url: () => "frontend/user/login", method: Method.POST },
-  logout: { url: () => "frontend/user/logout", method: Method.GET },
-  
+  getMeProfile: { url: () => "me", method: Method.GET },
+  getMePlayer: { url: () => "me/player", method: Method.GET },
+  skipToNext: {
+    url: (deviceId?: string) => `me/player/next?${deviceId}`,
+    method: Method.POST,
+  },
+  skipToPre: {
+    url: () => `me/player/previos`,
+    method: Method.POST,
+  },
+
+  searchItems: {
+    url: () => `search`,
+    method: Method.GET,
+  },
 };

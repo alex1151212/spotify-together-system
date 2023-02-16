@@ -1,18 +1,49 @@
-import axios from "axios";
 import Head from "next/head";
-import { spotifyAuthURL } from "./api/axios";
-// import Image from "next/image";
-// import { Inter } from "@next/font/google";
-// import styles from '@/styles/Home.module.css'
+import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
+import Cookie from "./api/cookie";
+import { searchItems, skipToNext } from "@/hook/Spotify";
+import Image from "next/image";
 
 export default function Home() {
+  const router = useRouter();
+  const [token, setToken] = useState<string>("");
+  const [test, setTest] = useState<string>("");
+  const [images, setImages] = useState<any[]>([]);
+
   const spotifyLoginHandler = () => {
-    if (process.env.SPOTIFY_ENDPOINT_URL) {
-      axios.get(spotifyAuthURL).then((e) => {
-        console.log(e);
+    const spotifyAuthorizeURL = "https://accounts.spotify.com/authorize/";
+    const clientId = process.env.SPOTIFY_CLIENT_ID || "";
+    const redirectURL = process.env.SPOTIFY_REDIRECT_URL || "";
+    const scopes = `streaming user-read-playback-position user-modify-playback-state user-read-playback-state user-read-private user-read-email app-remote-control`;
+    const state = "123";
+
+    const spotifyAuthQuery = `?client_id=${encodeURIComponent(
+      clientId
+    )}&redirect_uri=${encodeURIComponent(
+      redirectURL
+    )}&scope=${encodeURIComponent(scopes)}&response_type=token&state=${state}`;
+
+    window.location.href = spotifyAuthorizeURL + spotifyAuthQuery;
+  };
+  const testHandler = () => {
+    if (token) {
+      searchItems(token, test).then((e) => {
+        setImages(
+          e?.tracks?.items.map((item) => {
+            return item.album?.images[2];
+          })
+        );
+        console.log(e?.tracks?.items[0]?.album?.images);
       });
     }
   };
+
+  useEffect(() => {
+    const accessToken = Cookie.getCookie("accessToken");
+    if (accessToken) setToken(accessToken);
+  }, [router.isReady]);
+
   return (
     <>
       <Head>
@@ -22,7 +53,23 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <div>
-        <button onClick={spotifyLoginHandler}>Spotify Login</button>
+        {!token && <button onClick={spotifyLoginHandler}>Spotify Login</button>}
+        {<button onClick={testHandler}>test</button>}
+        <input
+          type="text"
+          onChange={(e) => {
+            setTest(e.target.value);
+          }}
+        />
+        {images.map((image, index) => (
+          <Image
+            key={index}
+            src={image.url}
+            alt=""
+            width={image.width}
+            height={image.height}
+          />
+        ))}
       </div>
     </>
   );
