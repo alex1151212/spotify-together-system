@@ -2,14 +2,15 @@ import Head from "next/head";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import Cookie from "./api/cookie";
-import { searchItems, skipToNext } from "@/hook/Spotify";
+import { searchItems, skipToNext } from "@/hook/spotify";
 import Image from "next/image";
+import { Box, Card, Container, Grid, Paper, Typography } from "@mui/material";
+import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 
 export default function Home() {
   const router = useRouter();
   const [token, setToken] = useState<string>("");
   const [test, setTest] = useState<string>("");
-  const [images, setImages] = useState<any[]>([]);
 
   const spotifyLoginHandler = () => {
     const spotifyAuthorizeURL = "https://accounts.spotify.com/authorize/";
@@ -25,18 +26,6 @@ export default function Home() {
     )}&scope=${encodeURIComponent(scopes)}&response_type=token&state=${state}`;
 
     window.location.href = spotifyAuthorizeURL + spotifyAuthQuery;
-  };
-  const testHandler = () => {
-    if (token) {
-      searchItems(token, test).then((e) => {
-        setImages(
-          e?.tracks?.items.map((item) => {
-            return item.album?.images[2];
-          })
-        );
-        console.log(e?.tracks?.items[0]?.album?.images);
-      });
-    }
   };
 
   useEffect(() => {
@@ -54,22 +43,6 @@ export default function Home() {
       </Head>
       <div>
         {!token && <button onClick={spotifyLoginHandler}>Spotify Login</button>}
-        {<button onClick={testHandler}>test</button>}
-        <input
-          type="text"
-          onChange={(e) => {
-            setTest(e.target.value);
-          }}
-        />
-        {images.map((image, index) => (
-          <Image
-            key={index}
-            src={image.url}
-            alt=""
-            width={image.width}
-            height={image.height}
-          />
-        ))}
       </div>
     </>
   );

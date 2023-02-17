@@ -61,7 +61,8 @@ const searchItems = (
     })
     .then((e) => {
       const { data } = e;
-      return data;
+      const { tracks } = data;
+      return tracks;
     })
     .catch((error) => {
       console.log(error);
