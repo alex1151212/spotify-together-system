@@ -1,1 +1,9 @@
-@import './components/index.scss'
+@import "./components/index.scss";
+@import "./mixins.scss";
+@import "./variables.scss";
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}

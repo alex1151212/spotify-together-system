@@ -1,4 +1,7 @@
-export interface ISearchtTracksResponseType {
+export type ISearchResponseType = {
+  [key in "album" | "tracks"]: ISearchTracksType;
+};
+export interface ISearchTracksType {
   href: string;
   items: IMusicItemType[];
   limit: number;

@@ -2,11 +2,6 @@ import Head from "next/head";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import Cookie from "./api/cookie";
-import { searchItems, skipToNext } from "@/hook/spotify";
-import Image from "next/image";
-import { Box, Card, Container, Grid, Paper, Typography } from "@mui/material";
-import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
-
 export default function Home() {
   const router = useRouter();
   const [token, setToken] = useState<string>("");
